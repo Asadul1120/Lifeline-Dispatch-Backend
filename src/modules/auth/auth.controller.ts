@@ -41,7 +41,33 @@ const VerifyUser = async (req: Request, res: Response) => {
   });
 };
 
+const LoginUser = async (req: Request, res: Response) => {
+  const payload = req.body;
+  const { accessToken, refreshToken } = await authService.LoginUser(payload);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+  });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+  });
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Logged in successfully",
+    data: { accessToken, refreshToken },
+  });
+};
+
 export const authController = {
   RegisterUser,
   VerifyUser,
+  LoginUser,
 };

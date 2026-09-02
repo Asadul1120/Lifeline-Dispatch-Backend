@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authController } from "./auth.controller.ts";
 import { validateRequest } from "../../middleware/validateRequest.ts";
 import {
+  loginValidation,
   registerValidation,
   verifyEmailValidation,
 } from "./auth.validation.ts";
@@ -18,6 +19,12 @@ router.post(
   "/verify-email",
   validateRequest(verifyEmailValidation),
   authController.VerifyUser,
+);
+
+router.post(
+  "/login",
+  validateRequest(loginValidation),
+  authController.LoginUser,
 );
 
 export const authRoutes = router;

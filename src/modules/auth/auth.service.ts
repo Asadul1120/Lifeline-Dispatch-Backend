@@ -1,8 +1,12 @@
 import { AuthProvider } from "../../generated/prisma/enums.ts";
 import { prisma } from "../../lib/prisma.ts";
 import { redisClient } from "../../lib/redis.ts";
-import { hashPassword } from "../../utils/password.ts";
-import { IRegisterPayload, IVerifyEmailPayload } from "./auth.interface.ts";
+import { comparePassword, hashPassword } from "../../utils/password.ts";
+import {
+  ILoginPayload,
+  IRegisterPayload,
+  IVerifyEmailPayload,
+} from "./auth.interface.ts";
 
 import crypto from "crypto";
 import { createToken } from "../../utils/token.ts";
@@ -133,7 +137,56 @@ const VerifyUser = async (payload: IVerifyEmailPayload) => {
     refreshToken,
   };
 };
+
+const LoginUser = async (payload: ILoginPayload) => {
+  const { email, password } = payload;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new Error("Invalid email");
+  }
+
+  if (!user.emailVerified) {
+    throw new Error("Please verify your email first");
+  }
+
+  if (user.authProvider === AuthProvider.GOOGLE) {
+    throw new Error("Please use Google login to sign in.");
+  }
+
+  const isPasswordValid = await comparePassword(
+    password,
+    user.password as string,
+  );
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid password");
+  }
+
+  const jwtPayload = {
+    userId: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(jwtPayload);
+
+  const refreshToken = createToken(jwtPayload);
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
 export const authService = {
   RegisterUser,
   VerifyUser,
+  LoginUser,
 };
