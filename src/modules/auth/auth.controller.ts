@@ -6,21 +6,19 @@ import { authService } from "./auth.service.ts";
 const RegisterUser = async (req: Request, res: Response) => {
   const payload = req.body;
   await authService.RegisterUser(payload);
+
   apiResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message:
-      "user created in redis successfully, please verify your email with the OTP sent to your email address",
+    message: "please verify your email with the OTP sent to your email address",
     data: null,
   });
 };
 
 const VerifyUser = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { user, accessToken, refreshToken } = await authService.VerifyUser(
-    payload.email,
-    payload.otp,
-  );
+  const { user, accessToken, refreshToken } =
+    await authService.VerifyUser(payload);
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,

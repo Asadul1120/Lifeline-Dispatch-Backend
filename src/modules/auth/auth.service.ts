@@ -2,10 +2,11 @@ import { AuthProvider } from "../../generated/prisma/enums.ts";
 import { prisma } from "../../lib/prisma.ts";
 import { redisClient } from "../../lib/redis.ts";
 import { hashPassword } from "../../utils/password.ts";
-import { IRegisterPayload } from "./auth.interface.ts";
+import { IRegisterPayload, IVerifyEmailPayload } from "./auth.interface.ts";
 
 import crypto from "crypto";
 import { createToken } from "../../utils/token.ts";
+import { sendEmail } from "../../utils/sendEmail.ts";
 
 const RegisterUser = async (payload: IRegisterPayload) => {
   const { name, email, password } = payload;
@@ -51,11 +52,26 @@ const RegisterUser = async (payload: IRegisterPayload) => {
       value: 5 * 60, // 5 minutes
     },
   });
+
+  await sendEmail({
+    to: email,
+    subject: "Verify Your Email - Lifeline Dispatch",
+    templateName: "UserRegistration-otp",
+    templateData: {
+      name,
+      email,
+      otp: otpValue,
+      expirationMinutes: 5,
+    },
+  });
 };
 
-const VerifyUser = async (email: string, otp: string) => {
+const VerifyUser = async (payload: IVerifyEmailPayload) => {
+  const { email, otp } = payload;
+
   const otpKey = `registration-otp:${email}`;
   const storedOtp = await redisClient.get(otpKey);
+
   if (!storedOtp) {
     throw new Error("OTP expired or not found");
   }
@@ -90,6 +106,16 @@ const VerifyUser = async (email: string, otp: string) => {
 
   await redisClient.del(otpKey);
   await redisClient.del(userKey);
+
+  await sendEmail({
+    to: createdUser.email,
+    subject: "Welcome to Lifeline Dispatch",
+    templateName: "UserRegistration-welcome",
+    templateData: {
+      name: createdUser.name,
+      email: createdUser.email,
+    },
+  });
 
   const jwtPayload = {
     userId: createdUser.id,

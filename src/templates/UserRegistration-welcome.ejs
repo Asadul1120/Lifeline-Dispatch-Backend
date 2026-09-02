@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Welcome to LifeLine Dispatch</title>
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <table
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+      role="presentation"
+      style="width: 100%; background-color: #ffffff"
+    >
+      <tr>
+        <td align="center" style="padding: 25px 10px">
+          <!-- Main Email Container -->
+          <table
+            width="700"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+            role="presentation"
+            style="
+              width: 100%;
+              max-width: 700px;
+              background-color: #f3f4fa;
+              border-radius: 10px;
+              overflow: hidden;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td style="padding: 25px 30px 10px">
+                <table
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  role="presentation"
+                >
+                  <tr>
+                    <td align="left" valign="middle">
+                      <table
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                        role="presentation"
+                      >
+                        <tr>
+                          <!-- Logo -->
+                          <td valign="middle" style="padding-right: 12px">
+                            <table
+                              width="54"
+                              height="54"
+                              border="0"
+                              cellspacing="0"
+                              cellpadding="0"
+                              role="presentation"
+                              style="
+                                width: 54px;
+                                height: 54px;
+                                background-color: #7c3aed;
+                                border-radius: 10px;
+                              "
+                            >
+                              <tr>
+                                <td
+                                  align="center"
+                                  valign="middle"
+                                  style="
+                                    color: #ffffff;
+                                    font-size: 21px;
+                                    font-weight: 700;
+                                  "
+                                >
+                                  LD
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+
+                          <!-- Brand -->
+                          <td
+                            valign="middle"
+                            style="
+                              color: #191355;
+                              font-size: 25px;
+                              font-weight: 700;
+                              line-height: 23px;
+                            "
+                          >
+                            LifeLine Dispatch
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+
+                    <!-- Date -->
+                    <td
+                      align="right"
+                      valign="top"
+                      style="
+                        padding-top: 12px;
+                        color: #a3a3a3;
+                        font-size: 13px;
+                        font-weight: 600;
+                      "
+                    >
+                      <%= new Date().toLocaleDateString("en-GB") %>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Success Icon -->
+            <tr>
+              <td align="center" style="padding: 38px 20px 15px">
+                <table
+                  width="75"
+                  height="75"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  role="presentation"
+                  style="
+                    width: 75px;
+                    height: 75px;
+                    background-color: #22c55e;
+                    border-radius: 50%;
+                  "
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      valign="middle"
+                      style="color: #ffffff; font-size: 38px; font-weight: 700"
+                    >
+                      ✓
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Heading -->
+            <tr>
+              <td align="center" style="padding: 10px 30px 12px">
+                <div
+                  style="
+                    color: #08275d;
+                    font-size: 32px;
+                    line-height: 40px;
+                    font-weight: 700;
+                  "
+                >
+                  Welcome to LifeLine Dispatch!
+                </div>
+              </td>
+            </tr>
+
+            <!-- Sub Heading -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 0 35px 35px;
+                  color: #697386;
+                  font-size: 17px;
+                  line-height: 26px;
+                "
+              >
+                Your email has been successfully verified.
+                <br />
+                Your account is now ready to use.
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td
+                style="
+                  padding: 0 45px;
+                  color: #111111;
+                  font-size: 16px;
+                  line-height: 1.8;
+                "
+              >
+                <p style="margin: 0 0 18px">
+                  Dear <strong><%= name %></strong>,
+                </p>
+
+                <p style="margin: 0 0 18px">
+                  Welcome to
+                  <strong>LifeLine Dispatch!</strong>
+                  We are pleased to let you know that your email verification
+                  has been completed successfully.
+                </p>
+
+                <p style="margin: 0 0 18px">
+                  Your registered email is:
+                  <strong style="color: #08275d"><%= email %></strong>
+                </p>
+
+                <p style="margin: 0 0 25px">
+                  You can now securely access your account and use the available
+                  healthcare services on our platform.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Welcome Box -->
+            <tr>
+              <td style="padding: 0 45px 30px">
+                <table
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  role="presentation"
+                  style="
+                    width: 100%;
+                    background-color: #ffffff;
+                    border: 1px solid #e1e5ef;
+                    border-radius: 10px;
+                  "
+                >
+                  <tr>
+                    <td
+                      style="
+                        padding: 22px 25px;
+                        color: #333333;
+                        font-size: 15px;
+                        line-height: 1.8;
+                      "
+                    >
+                      <strong
+                        style="
+                          display: block;
+                          margin-bottom: 10px;
+                          color: #08275d;
+                          font-size: 17px;
+                        "
+                      >
+                        Your account is ready
+                      </strong>
+
+                      ✓ Email successfully verified
+                      <br />
+
+                      ✓ Account successfully activated
+                      <br />
+
+                      ✓ Secure access enabled
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Thank You -->
+            <tr>
+              <td
+                style="
+                  padding: 0 45px 35px;
+                  color: #111111;
+                  font-size: 16px;
+                  line-height: 1.8;
+                "
+              >
+                <p style="margin: 0 0 18px">
+                  We are glad to have you with us and look forward to providing
+                  you with a secure and convenient emergency response
+                  experience.
+                </p>
+
+                <p style="margin: 0">
+                  Regards,
+                  <br />
+                  <strong>Team LifeLine Dispatch </strong>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td style="padding: 0">
+                <div
+                  style="width: 100%; height: 1px; background-color: #b5b5b5"
+                ></div>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="padding: 24px 30px 30px">
+                <!-- Social -->
+                <table
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  role="presentation"
+                  style="margin: 0 auto"
+                >
+                  <tr>
+                    <td style="padding: 0 6px">
+                      <div
+                        style="
+                          width: 32px;
+                          height: 32px;
+                          line-height: 32px;
+                          background-color: #7587a8;
+                          border-radius: 50%;
+                          color: #ffffff;
+                          font-size: 18px;
+                          font-weight: 700;
+                          text-align: center;
+                        "
+                      >
+                        f
+                      </div>
+                    </td>
+
+                    <td style="padding: 0 6px">
+                      <div
+                        style="
+                          width: 32px;
+                          height: 32px;
+                          line-height: 32px;
+                          background-color: #7587a8;
+                          border-radius: 50%;
+                          color: #ffffff;
+                          font-size: 13px;
+                          text-align: center;
+                        "
+                      >
+                        ▶
+                      </div>
+                    </td>
+
+                    <td style="padding: 0 6px">
+                      <div
+                        style="
+                          width: 32px;
+                          height: 32px;
+                          line-height: 32px;
+                          background-color: #7587a8;
+                          border-radius: 50%;
+                          color: #ffffff;
+                          font-size: 14px;
+                          font-weight: 700;
+                          text-align: center;
+                        "
+                      >
+                        in
+                      </div>
+                    </td>
+
+                    <td style="padding: 0 6px">
+                      <div
+                        style="
+                          width: 32px;
+                          height: 32px;
+                          line-height: 32px;
+                          background-color: #7587a8;
+                          border-radius: 50%;
+                          color: #ffffff;
+                          font-size: 18px;
+                          text-align: center;
+                        "
+                      >
+                        ◎
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                <p
+                  style="
+                    margin: 18px 0 0;
+                    color: #000000;
+                    font-size: 14px;
+                    line-height: 22px;
+                  "
+                >
+                  LifeLine Dispatch
+                  <br />
+                  Your trusted emergency ambulance dispatch platform
+                </p>
+
+                <p
+                  style="
+                    margin: 16px 0 0;
+                    color: #8a8a8a;
+                    font-size: 12px;
+                    line-height: 18px;
+                  "
+                >
+                  This is an automated email. Please do not reply to this
+                  message.
+                  <br />
+                  © LifeLine Dispatch. All rights reserved.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
