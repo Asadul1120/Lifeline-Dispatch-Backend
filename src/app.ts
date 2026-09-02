@@ -4,6 +4,7 @@ import express, { type Request, type Response } from "express";
 
 import { globalErrorHandler } from "./middleware/global-error-handler.js";
 import { notFound } from "./middleware/not-found.js";
+import { authRoutes } from "./modules/auth/auth.route.ts";
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 //main routes
+
+app.use("/api/v1/auth", authRoutes);
 
 
 
