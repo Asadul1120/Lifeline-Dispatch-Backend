@@ -1,0 +1,35 @@
+model EmergencyRequest {
+  id        String @id @default(uuid())
+  patientId String
+
+  patient        User       @relation("PatientRequests", fields: [patientId], references: [id])
+  ambulanceId    String?
+  ambulance      Ambulance? @relation(fields: [ambulanceId], references: [id])
+  pickupLocation String     @db.VarChar(255)
+  destination    String?    @db.VarChar(255)
+  emergencyType  String     @db.VarChar(100)
+
+  priority Priority      @default(MEDIUM)
+  status   RequestStatus @default(PENDING)
+  trip     Trip?
+  payment  Payment?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RequestStatus {
+  PENDING
+  ASSIGNED
+  ON_THE_WAY
+  PICKED_UP
+  COMPLETED
+  CANCELLED
+}

@@ -1,0 +1,11 @@
+model AuditLog {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  action   String  @db.VarChar(100)
+  entity   String  @db.VarChar(100)
+  entityId String?
+
+  createdAt DateTime @default(now())
+}

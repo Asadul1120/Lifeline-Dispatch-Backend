@@ -1,0 +1,24 @@
+model Payment {
+  id        String           @id @default(uuid())
+  requestId String           @unique
+  request   EmergencyRequest @relation(fields: [requestId], references: [id])
+  amount    Decimal          @db.Decimal(10, 2)
+  gateway   String           @db.VarChar(50)
+  method    PaymentMethod    @default(bKash)
+
+  transactionId String?       @unique @db.VarChar(100)
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum PaymentMethod {
+  bKash
+  Stripe
+  SSLCommerz
+}

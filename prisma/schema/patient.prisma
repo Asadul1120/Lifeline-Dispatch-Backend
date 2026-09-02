@@ -1,0 +1,14 @@
+model Patient {
+  id               String  @id @default(uuid())
+  phone            String? @db.VarChar(20)
+  address          String? @db.VarChar(255)
+  bloodGroup       String? @db.VarChar(5)
+  emergencyContact String? @db.VarChar(20)
+  userId           String  @unique
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("patients")
+}

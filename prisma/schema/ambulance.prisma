@@ -1,0 +1,25 @@
+model Ambulance {
+  id                String             @id @default(uuid())
+  driverId          String             @unique
+  driver            Driver             @relation(fields: [driverId], references: [id])
+  vehicleNumber     String             @unique @db.VarChar(50)
+  type              AmbulanceType      @default(BASIC)
+  status            AmbulanceStatus    @default(AVAILABLE)
+  location          String?            @db.VarChar(255)
+  emergencyRequests EmergencyRequest[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+enum AmbulanceStatus {
+  AVAILABLE
+  BUSY
+  MAINTENANCE
+}
+
+enum AmbulanceType {
+  BASIC
+  ICU
+  CARDIAC
+  VENTILATOR
+}

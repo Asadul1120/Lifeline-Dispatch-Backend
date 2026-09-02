@@ -1,19 +1,11 @@
 generator client {
-  provider                = "prisma-client"
-  output                  = "../../src/generated/prisma"
-  moduleFormat            = "esm"
-  generatedFileExtension  = "ts"
-  importFileExtension     = "ts"
+  provider               = "prisma-client"
+  output                 = "../../src/generated/prisma"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
 }
 
 datasource db {
   provider = "postgresql"
-}
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
