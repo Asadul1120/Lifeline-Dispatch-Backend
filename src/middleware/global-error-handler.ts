@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { AppError } from "../utils/AppError.ts";
 
 interface HttpError extends Error {
   statusCode?: number;
@@ -10,9 +11,23 @@ export function globalErrorHandler(
   res: Response,
   _next: NextFunction,
 ): void {
-  const statusCode = error.statusCode ?? 500;
+
+  let statusCode = 500;
+  let message = "Internal server error";
+
+  if (error instanceof AppError) {
+    statusCode = error.statusCode;
+    message = error.message;
+  } else {
+    statusCode = error.statusCode ?? 500;
+    message = error.message || message;
+  }
+
   res.status(statusCode).json({
     success: false,
-    message: error.message || "Internal server error",
+    message,
+    ...(process.env.NODE_ENV === "development" && {
+      stack: error.stack,
+    }),
   });
 }

@@ -11,6 +11,8 @@ import {
 import crypto from "crypto";
 import { createToken } from "../../utils/token.ts";
 import { sendEmail } from "../../utils/sendEmail.ts";
+import { AppError } from "../../utils/AppError.ts";
+import httpStatus from "http-status-codes";
 
 const RegisterUser = async (payload: IRegisterPayload) => {
   const { name, email, password } = payload;
@@ -24,11 +26,12 @@ const RegisterUser = async (payload: IRegisterPayload) => {
       existingUser.googleId ||
       existingUser.authProvider === AuthProvider.GOOGLE
     ) {
-      throw new Error(
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
         "User already exists with Google login. Please use Google login to sign in.",
       );
     }
-    throw new Error("User already exists");
+    throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
   }
 
   const hashedPassword = await hashPassword(password);
@@ -77,16 +80,16 @@ const VerifyUser = async (payload: IVerifyEmailPayload) => {
   const storedOtp = await redisClient.get(otpKey);
 
   if (!storedOtp) {
-    throw new Error("OTP expired or not found");
+    throw new AppError(httpStatus.BAD_REQUEST, "OTP expired or not found");
   }
   if (storedOtp !== otp) {
-    throw new Error("Invalid OTP");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid OTP");
   }
 
   const userKey = `registration-user:${email}`;
   const storedUser = await redisClient.get(userKey);
   if (!storedUser) {
-    throw new Error("User data expired or not found");
+    throw new AppError(httpStatus.BAD_REQUEST, "User data expired or not found");
   }
 
   const user = JSON.parse(storedUser);
@@ -141,6 +144,8 @@ const VerifyUser = async (payload: IVerifyEmailPayload) => {
 const LoginUser = async (payload: ILoginPayload) => {
   const { email, password } = payload;
 
+  
+
   const user = await prisma.user.findUnique({
     where: {
       email,
@@ -148,15 +153,15 @@ const LoginUser = async (payload: ILoginPayload) => {
   });
 
   if (!user) {
-    throw new Error("Invalid email");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email");
   }
 
   if (!user.emailVerified) {
-    throw new Error("Please verify your email first");
+    throw new AppError(httpStatus.BAD_REQUEST, "Please verify your email first");
   }
 
   if (user.authProvider === AuthProvider.GOOGLE) {
-    throw new Error("Please use Google login to sign in.");
+    throw new AppError(httpStatus.BAD_REQUEST, "Please use Google login to sign in.");
   }
 
   const isPasswordValid = await comparePassword(
@@ -165,7 +170,7 @@ const LoginUser = async (payload: ILoginPayload) => {
   );
 
   if (!isPasswordValid) {
-    throw new Error("Invalid password");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid password");
   }
 
   const jwtPayload = {

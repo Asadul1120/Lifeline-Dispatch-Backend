@@ -4,6 +4,8 @@ import { prisma } from "../lib/prisma.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { Role, UserStatus } from "../generated/prisma/browser.ts";
 import { verifyToken } from "../utils/token.ts";
+import { AppError } from "../utils/AppError.ts";
+import httpStatus from "http-status-codes";
 
 const Auth = (...requiredRoles: Role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +17,7 @@ const Auth = (...requiredRoles: Role[]) => {
         : req.headers.authorization;
 
     if (!token) {
-      throw new Error("Access token not found.");
+      throw new AppError(httpStatus.BAD_REQUEST, "Access token not found.");
     }
 
     // Verify Token
@@ -23,7 +25,7 @@ const Auth = (...requiredRoles: Role[]) => {
     const { userId } = verifiedToken;
 
     if (!userId) {
-      throw new Error("Invalid access token.");
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid access token.");
     }
 
     // Check User
@@ -42,21 +44,21 @@ const Auth = (...requiredRoles: Role[]) => {
     });
 
     if (!user) {
-      throw new Error("User not found.");
+      throw new AppError(httpStatus.NOT_FOUND, "User not found.");
     }
 
     // Check User Status
     if (user.status === UserStatus.SUSPENDED) {
-      throw new Error("Your account has been suspended.");
+      throw new AppError(httpStatus.FORBIDDEN, "Your account has been suspended.");
     }
 
     if (user.status === UserStatus.BANNED) {
-      throw new Error("Your account has been banned.");
+      throw new AppError(httpStatus.FORBIDDEN, "Your account has been banned.");
     }
 
     // Check Role
     if (requiredRoles.length && !requiredRoles.includes(user.role)) {
-      throw new Error("You are not authorized to access this resource.");
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to access this resource.");
     }
 
     // Set User
