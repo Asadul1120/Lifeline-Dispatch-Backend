@@ -7,6 +7,9 @@ import {
   verifyEmailValidation,
 } from "./auth.validation.ts";
 
+import { Role } from "../../generated/prisma/enums.ts";
+import Auth from "../../middleware/Auth.ts";
+
 const router = Router();
 
 router.post(
@@ -25,6 +28,12 @@ router.post(
   "/login",
   validateRequest(loginValidation),
   authController.LoginUser,
+);
+
+router.get(
+  "/test",
+  Auth(),
+  authController.test,
 );
 
 export const authRoutes = router;

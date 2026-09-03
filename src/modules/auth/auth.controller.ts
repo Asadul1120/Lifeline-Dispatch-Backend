@@ -66,8 +66,19 @@ const LoginUser = async (req: Request, res: Response) => {
   });
 };
 
+const test = async (req: Request, res: Response) => {
+  const user = req.user;
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "You have access to this route",
+    data: { user },
+  });
+};
+
 export const authController = {
   RegisterUser,
   VerifyUser,
   LoginUser,
+  test,
 };
