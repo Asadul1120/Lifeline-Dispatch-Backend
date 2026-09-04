@@ -66,6 +66,59 @@ const LoginUser = async (req: Request, res: Response) => {
   });
 };
 
+const refreshToken = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await authService.refreshToken(refreshToken);
+
+  res.cookie("accessToken", result.accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+  });
+
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 7, //  7 day
+  });
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Token Generated successfully",
+    data: result,
+  });
+};
+
+const googleLogin = async (req: Request, res: Response) => {
+  const Payload = req.body;
+  const result = await authService.googleLogin(Payload);
+
+  res.cookie("accessToken", result.accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+  });
+
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 7, //  7 day
+  });
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Logged in successfully",
+    data: result,
+  });
+};
+
 const test = async (req: Request, res: Response) => {
   const user = req.user;
   apiResponse(res, {
@@ -80,5 +133,7 @@ export const authController = {
   RegisterUser,
   VerifyUser,
   LoginUser,
+  refreshToken,
+  googleLogin,
   test,
 };

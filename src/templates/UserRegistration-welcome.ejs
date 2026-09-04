@@ -5,7 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>Welcome to LifeLine Dispatch</title>
+    <title style="font-size: 22px">Welcome to LifeLine Dispatch</title>
+
+    <style>
+      @media only screen and (max-width: 600px) {
+        .email-container {
+          width: 100% !important;
+          max-width: 100% !important;
+          border-radius: 0 !important;
+        }
+
+        .header-padding {
+          padding: 18px 18px 8px !important;
+        }
+
+        .logo-box {
+          width: 40px !important;
+          height: 40px !important;
+        }
+
+        .logo-text {
+          font-size: 14px !important;
+        }
+
+        .brand-title {
+          font-size: 20px !important;
+          line-height: 22px !important;
+        }
+
+        .date-text {
+          font-size: 11px !important;
+        }
+
+        .success-icon {
+          width: 60px !important;
+          height: 60px !important;
+        }
+
+        .success-check {
+          font-size: 30px !important;
+        }
+
+        .main-title {
+          font-size: 22px !important;
+          line-height: 29px !important;
+        }
+
+        .subtitle {
+          padding: 0 20px 25px !important;
+          font-size: 14px !important;
+          line-height: 21px !important;
+        }
+
+        .body-section {
+          padding: 0 20px !important;
+          font-size: 14px !important;
+          line-height: 23px !important;
+        }
+
+        .welcome-box {
+          padding: 0 20px 25px !important;
+        }
+
+        .welcome-box-content {
+          padding: 18px !important;
+          font-size: 13px !important;
+          line-height: 21px !important;
+        }
+
+        .welcome-title {
+          font-size: 15px !important;
+        }
+
+        .footer-text {
+          font-size: 12px !important;
+          line-height: 18px !important;
+        }
+      }
+    </style>
   </head>
 
   <body
@@ -43,7 +120,7 @@
           >
             <!-- Header -->
             <tr>
-              <td style="padding: 25px 30px 10px">
+              <td class="header-padding" style="padding: 25px 30px 10px">
                 <table
                   width="100%"
                   border="0"
@@ -63,15 +140,15 @@
                           <!-- Logo -->
                           <td valign="middle" style="padding-right: 12px">
                             <table
-                              width="54"
-                              height="54"
+                              width="40"
+                              height="40"
                               border="0"
                               cellspacing="0"
                               cellpadding="0"
                               role="presentation"
                               style="
-                                width: 54px;
-                                height: 54px;
+                                width: 40px;
+                                height: 40px;
                                 background-color: #7c3aed;
                                 border-radius: 10px;
                               "
@@ -82,7 +159,7 @@
                                   valign="middle"
                                   style="
                                     color: #ffffff;
-                                    font-size: 21px;
+                                    font-size: 16px;
                                     font-weight: 700;
                                   "
                                 >
@@ -97,9 +174,9 @@
                             valign="middle"
                             style="
                               color: #191355;
-                              font-size: 25px;
+                              font-size: 16px;
                               font-weight: 700;
-                              line-height: 23px;
+                              line-height: 15px;
                             "
                           >
                             LifeLine Dispatch
@@ -115,7 +192,7 @@
                       style="
                         padding-top: 12px;
                         color: #a3a3a3;
-                        font-size: 13px;
+                        font-size: 10px;
                         font-weight: 600;
                       "
                     >
@@ -130,15 +207,15 @@
             <tr>
               <td align="center" style="padding: 38px 20px 15px">
                 <table
-                  width="75"
-                  height="75"
+                  width="65"
+                  height="65"
                   border="0"
                   cellspacing="0"
                   cellpadding="0"
                   role="presentation"
                   style="
-                    width: 75px;
-                    height: 75px;
+                    width: 65px;
+                    height: 65px;
                     background-color: #22c55e;
                     border-radius: 50%;
                   "
@@ -147,6 +224,7 @@
                     <td
                       align="center"
                       valign="middle"
+                      class="success-check"
                       style="color: #ffffff; font-size: 38px; font-weight: 700"
                     >
                       ✓
@@ -158,12 +236,12 @@
 
             <!-- Heading -->
             <tr>
-              <td align="center" style="padding: 10px 30px 12px">
+              <td align="center" style="padding: 10px">
                 <div
                   style="
                     color: #08275d;
-                    font-size: 32px;
-                    line-height: 40px;
+                    font-size: 19px;
+                    line-height: 15px;
                     font-weight: 700;
                   "
                 >
@@ -177,10 +255,10 @@
               <td
                 align="center"
                 style="
-                  padding: 0 35px 35px;
+                  padding: 8px;
                   color: #697386;
-                  font-size: 17px;
-                  line-height: 26px;
+                  font-size: 14px;
+                  line-height: 18px;
                 "
               >
                 Your email has been successfully verified.
@@ -193,13 +271,14 @@
             <tr>
               <td
                 style="
-                  padding: 0 45px;
+                  margin-top: 15px;
+                  padding: 0 32px;
                   color: #111111;
-                  font-size: 16px;
-                  line-height: 1.8;
-                "
+                  font-size: 14px;
+                  line-height: 1.6;
+                " 
               >
-                <p style="margin: 0 0 18px">
+                <p style="margin: 18px 0 8px">
                   Dear <strong><%= name %></strong>,
                 </p>
 
@@ -217,14 +296,14 @@
 
                 <p style="margin: 0 0 25px">
                   You can now securely access your account and use the available
-                  healthcare services on our platform.
+                  LifeLine Dispatch services on our platform.
                 </p>
               </td>
             </tr>
 
             <!-- Welcome Box -->
             <tr>
-              <td style="padding: 0 45px 30px">
+              <td class="welcome-box" style="padding: 0 45px 30px">
                 <table
                   width="100%"
                   border="0"
@@ -241,10 +320,10 @@
                   <tr>
                     <td
                       style="
-                        padding: 22px 25px;
+                        padding: 20px 24px;
                         color: #333333;
-                        font-size: 15px;
-                        line-height: 1.8;
+                        font-size: 14px;
+                        line-height: 1.6;
                       "
                     >
                       <strong
@@ -252,7 +331,7 @@
                           display: block;
                           margin-bottom: 10px;
                           color: #08275d;
-                          font-size: 17px;
+                          font-size: 14px;
                         "
                       >
                         Your account is ready
@@ -277,8 +356,8 @@
                 style="
                   padding: 0 45px 35px;
                   color: #111111;
-                  font-size: 16px;
-                  line-height: 1.8;
+                  font-size: 14px;
+                  line-height: 1.6;
                 "
               >
                 <p style="margin: 0 0 18px">

@@ -36,4 +36,7 @@ router.get(
   authController.test,
 );
 
+router.post('/refresh-token', authController.refreshToken);
+router.post('/google', authController.googleLogin);
+
 export const authRoutes = router;

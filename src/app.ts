@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import path from "path";
 import cors from "cors";
 import express, { type Request, type Response } from "express";
 
@@ -6,24 +7,52 @@ import { globalErrorHandler } from "./middleware/global-error-handler.js";
 import { notFound } from "./middleware/not-found.js";
 import { authRoutes } from "./modules/auth/auth.route.ts";
 
+
 const app = express();
 
+
+// EJS setup
+app.set("view engine", "ejs");
+app.set(
+  "views",
+  path.join(process.cwd(), "src", "templates")
+);
+
+
 app.use(cors());
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
+
 app.get("/", (_req: Request, res: Response) => {
-  res.json({ success: true, message: "LifeLine Dispatch API is running" });
+  res.json({
+    success: true,
+    message: "LifeLine Dispatch API is running",
+  });
 });
 
-//main routes
 
+// Google Login Test Page
+app.get("/google-login", (_req: Request, res: Response) => {
+  res.render("google-login", {
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  });
+});
+
+
+// Main routes
 app.use("/api/v1/auth", authRoutes);
 
 
 
+
+// Error handling middleware
 app.use(notFound);
 app.use(globalErrorHandler);
+
 
 export default app;

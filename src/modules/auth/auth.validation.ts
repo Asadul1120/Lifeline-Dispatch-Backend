@@ -15,3 +15,11 @@ export const loginValidation = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string(),
 });
+
+export const refreshTokenValidation = z.object({
+  token: z.string("Invalid token"),
+});
+
+export const googleLoginValidation = z.object({
+  idToken: z.string("Invalid id token"),
+});

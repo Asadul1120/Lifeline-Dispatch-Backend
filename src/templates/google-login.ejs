@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Google Login Test</title>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <style>
+      body {
+        font-family: Arial;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+
+      h2 {
+        margin-bottom: 30px;
+      }
+
+      #result {
+        margin-top: 30px;
+        width: 500px;
+        word-break: break-all;
+        background: #f5f5f5;
+        padding: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h2>Google Login Test</h2>
+
+    <div
+      id="g_id_onload"
+      data-client_id="<%= GOOGLE_CLIENT_ID %>"
+      data-callback="handleCredentialResponse"
+    ></div>
+
+
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="signin_with"
+      data-shape="rectangular"
+    ></div>
+
+
+    <div id="result"></div>
+
+
+    <script>
+      async function handleCredentialResponse(response) {
+
+        console.log("Google ID Token:", response.credential);
+
+        const res = await fetch(
+          "http://localhost:5000/api/v1/auth/google",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              idToken: response.credential,
+            }),
+          }
+        );
+
+
+        const data = await res.json();
+
+
+        document.getElementById("result").innerHTML =
+          "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+
+
+        console.log(data);
+      }
+    </script>
+
+  </body>
+</html>
