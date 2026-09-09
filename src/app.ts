@@ -8,6 +8,7 @@ import { globalErrorHandler } from "./middleware/global-error-handler.js";
 import { notFound } from "./middleware/not-found.js";
 import { authRoutes } from "./modules/auth/auth.route.ts";
 import { userRoutes } from "./modules/user/user.route.ts";
+import { driverRoutes } from "./modules/driver/driver.route.ts";
 
 
 const app = express();
@@ -49,6 +50,7 @@ app.get("/google-login", (_req: Request, res: Response) => {
 // Main routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/driver", driverRoutes);
 
 
 

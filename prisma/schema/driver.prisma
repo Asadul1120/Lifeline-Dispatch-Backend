@@ -1,16 +1,28 @@
 model Driver {
-  id              String     @id @default(uuid())
-  userId          String     @unique
-  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  licenseNumber   String     @unique @db.VarChar(50)
+  id              String  @id @default(uuid())
+  userId          String  @unique
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber   String  @unique @db.VarChar(50)
   experience      Int
-  isAvailable     Boolean    @default(false)
-  currentLocation String?    @db.VarChar(255)
-  contactNumber   String?    @db.VarChar(20)
-  ambulance       Ambulance?
-  trips           Trip[]
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  isAvailable     Boolean @default(false)
+  currentLocation String? @db.VarChar(255)
+  contactNumber   String? @db.VarChar(20)
+
+  applicationStatus DriverApplicationStatus @default(PENDING)
+  approvedAt        DateTime?
+  approvedBy        String?
+
+  ambulance Ambulance?
+  trips     Trip[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("drivers")
+}
+
+enum DriverApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
