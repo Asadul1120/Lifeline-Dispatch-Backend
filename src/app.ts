@@ -1,3 +1,4 @@
+
 import cookieParser from "cookie-parser";
 import path from "path";
 import cors from "cors";
@@ -6,6 +7,7 @@ import express, { type Request, type Response } from "express";
 import { globalErrorHandler } from "./middleware/global-error-handler.js";
 import { notFound } from "./middleware/not-found.js";
 import { authRoutes } from "./modules/auth/auth.route.ts";
+import { userRoutes } from "./modules/user/user.route.ts";
 
 
 const app = express();
@@ -46,6 +48,7 @@ app.get("/google-login", (_req: Request, res: Response) => {
 
 // Main routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 
 
 

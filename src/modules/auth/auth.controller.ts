@@ -119,13 +119,15 @@ const googleLogin = async (req: Request, res: Response) => {
   });
 };
 
-const test = async (req: Request, res: Response) => {
-  const user = req.user;
+const logoutUser = async (req: Request, res: Response) => {
+  await authService.logoutUser();
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
   apiResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "You have access to this route",
-    data: { user },
+    message: "User Logged out successfully",
+    data: null,
   });
 };
 
@@ -135,5 +137,5 @@ export const authController = {
   LoginUser,
   refreshToken,
   googleLogin,
-  test,
+  logoutUser,
 };

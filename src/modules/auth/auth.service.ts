@@ -372,10 +372,17 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   };
 };
 
+const logoutUser = async () => {
+
+  return null;
+
+};
+
 export const authService = {
   RegisterUser,
   VerifyUser,
   LoginUser,
   refreshToken,
   googleLogin,
+  logoutUser,
 };

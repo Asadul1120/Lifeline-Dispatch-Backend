@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authController } from "./auth.controller.ts";
 import { validateRequest } from "../../middleware/validateRequest.ts";
 import {
+  googleLoginValidation,
   loginValidation,
   registerValidation,
   verifyEmailValidation,
@@ -30,13 +31,12 @@ router.post(
   authController.LoginUser,
 );
 
-router.get(
-  "/test",
-  Auth(),
-  authController.test,
+router.post("/refresh-token", authController.refreshToken);
+router.post(
+  "/google",
+  validateRequest(googleLoginValidation),
+  authController.googleLogin,
 );
-
-router.post('/refresh-token', authController.refreshToken);
-router.post('/google', authController.googleLogin);
+router.post("/logout", authController.logoutUser);
 
 export const authRoutes = router;
