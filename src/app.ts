@@ -11,6 +11,7 @@ import { driverRoutes } from "./modules/driver/driver.route.ts";
 import { adminRoutes } from "./modules/admin/admin.route.ts";
 import { emergencyRequestRoutes } from "./modules/emergencyRequest/emergencyRequest.route.ts";
 import { ambulanceRoutes } from "./modules/ambulance/ambulance.route.ts";
+import { tripRoutes } from "./modules/trip/trip.route.ts";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/api/v1/driver", driverRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/emergencyRequest", emergencyRequestRoutes);
 app.use("/api/v1/ambulance", ambulanceRoutes);
+app.use("/api/v1/trip", tripRoutes);
 
 // Error handling middleware
 app.use(notFound);
