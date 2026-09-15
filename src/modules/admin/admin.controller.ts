@@ -46,8 +46,30 @@ const rejectDriver = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const assignAmbulance = catchAsync(
+  async (req: Request, res: Response) => {
+    const { requestId } = req.params;
+    const { ambulanceId } = req.body;
+    const adminId = req.user?.id;
+
+    const result = await AdminService.assignAmbulance(
+      requestId as string,
+      ambulanceId,
+      adminId as string,
+    );
+
+    apiResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Ambulance assigned successfully",
+      data: result,
+    });
+  },
+);
+
 export const AdminController = {
   getPendingDrivers,
   approveDriver,
   rejectDriver,
+  assignAmbulance,
 };

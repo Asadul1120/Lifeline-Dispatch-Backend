@@ -2,7 +2,7 @@ import httpStatus from "http-status-codes";
 
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
-import { DriverApplicationStatus, Role } from "../../generated/prisma/enums.ts";
+import { AmbulanceStatus, DriverApplicationStatus, RequestStatus, Role } from "../../generated/prisma/enums.ts";
 
 const getPendingDrivers = async () => {
   const drivers = await prisma.driver.findMany({
@@ -144,8 +144,124 @@ const rejectDriver = async (driverId: string, adminId: string) => {
   return rejectedDriver;
 };
 
+const assignAmbulance = async (
+  requestId: string,
+  ambulanceId: string,
+  adminId: string,
+) => {
+  const result = await prisma.$transaction(async (tx) => {
+    const emergencyRequest = await tx.emergencyRequest.findUnique({
+      where: {
+        id: requestId,
+      },
+    });
+
+    if (!emergencyRequest) {
+      throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
+    }
+
+    if (emergencyRequest.status !== RequestStatus.PENDING) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Only pending requests can be assigned",
+      );
+    }
+
+    const ambulance = await tx.ambulance.findUnique({
+      where: {
+        id: ambulanceId,
+      },
+      include: {
+        driver: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (!ambulance) {
+      throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+    }
+
+    if (ambulance.status !== AmbulanceStatus.AVAILABLE) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Ambulance is not available");
+    }
+
+    if (
+      ambulance.driver.applicationStatus !== DriverApplicationStatus.APPROVED
+    ) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Ambulance driver is not approved",
+      );
+    }
+
+    if (!ambulance.driver.isAvailable) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Driver is not available");
+    }
+
+    const updatedRequest = await tx.emergencyRequest.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        ambulanceId: ambulance.id,
+        status: RequestStatus.ASSIGNED,
+      },
+      include: {
+        patient: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        ambulance: {
+          include: {
+            driver: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    await tx.ambulance.update({
+      where: {
+        id: ambulance.id,
+      },
+      data: {
+        status: AmbulanceStatus.BUSY,
+      },
+    });
+
+    await tx.driver.update({
+      where: {
+        id: ambulance.driverId,
+      },
+      data: {
+        isAvailable: false,
+      },
+    });
+
+    return updatedRequest;
+  });
+
+  return result;
+};
+
 export const AdminService = {
   getPendingDrivers,
   approveDriver,
   rejectDriver,
+  assignAmbulance,
 };
