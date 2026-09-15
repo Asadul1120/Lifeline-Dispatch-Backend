@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status-codes";
-
 import { catchAsync } from "../../utils/catchAsync.js";
 import { AdminService } from "./admin.service.js";
 import { apiResponse } from "../../utils/apiResponse.ts";
