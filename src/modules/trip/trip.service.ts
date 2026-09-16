@@ -12,103 +12,122 @@ import {
 import { AuditLogService } from "../auditLog/auditLog.service.ts";
 
 const startTrip = async (driverUserId: string, requestId: string) => {
-  const result = await prisma.$transaction(async (tx) => {
-    const request = await tx.emergencyRequest.findUnique({
-      where: {
-        id: requestId,
-      },
-      include: {
-        ambulance: {
-          include: {
-            driver: {
-              include: {
-                user: true,
+  const result = await prisma.$transaction(
+    async (tx) => {
+      const request = await tx.emergencyRequest.findUnique({
+        where: {
+          id: requestId,
+        },
+        include: {
+          ambulance: {
+            include: {
+              driver: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+          trip: true,
+        },
+      });
+
+      if (!request) {
+        throw new AppError(
+          httpStatus.NOT_FOUND,
+          "Emergency request not found",
+        );
+      }
+
+      if (!request.ambulance) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "No ambulance has been assigned to this request",
+        );
+      }
+
+      if (!request.trip && request.status !== RequestStatus.ASSIGNED) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "Only assigned requests can start a trip",
+        );
+      }
+
+      if (request.trip) {
+        throw new AppError(
+          httpStatus.CONFLICT,
+          "Trip already exists for this request",
+        );
+      }
+
+      const driver = request.ambulance.driver;
+
+      if (!driver) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "No driver is assigned to this ambulance",
+        );
+      }
+
+      if (driver.userId !== driverUserId) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          "You are not assigned to this ambulance",
+        );
+      }
+
+      if (driver.user.role !== Role.DRIVER) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          "Only drivers can start a trip",
+        );
+      }
+
+      const trip = await tx.trip.create({
+        data: {
+          requestId: request.id,
+          driverId: driver.id,
+          startTime: new Date(),
+          status: TripStatus.STARTED,
+        },
+        include: {
+          request: true,
+          driver: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
               },
             },
           },
         },
-        trip: true,
-      },
-    });
+      });
 
-    if (!request) {
-      throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
-    }
-
-    if (!request.ambulance) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "No ambulance has been assigned to this request",
-      );
-    }
-
-    if (!request.trip && request.status !== RequestStatus.ASSIGNED) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "Only assigned requests can start a trip",
-      );
-    }
-
-    if (request.trip) {
-      throw new AppError(
-        httpStatus.CONFLICT,
-        "Trip already exists for this request",
-      );
-    }
-
-    const driver = request.ambulance.driver;
-
-    if (driver.userId !== driverUserId) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not assigned to this ambulance",
-      );
-    }
-
-    if (driver.user.role !== Role.DRIVER) {
-      throw new AppError(httpStatus.FORBIDDEN, "Only drivers can start a trip");
-    }
-
-    const trip = await tx.trip.create({
-      data: {
-        requestId: request.id,
-        driverId: driver.id,
-        startTime: new Date(),
-        status: TripStatus.STARTED,
-      },
-      include: {
-        request: true,
-        driver: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
+      await tx.emergencyRequest.update({
+        where: {
+          id: request.id,
         },
-      },
-    });
+        data: {
+          status: RequestStatus.ON_THE_WAY,
+        },
+      });
 
-    await tx.emergencyRequest.update({
-      where: {
-        id: request.id,
-      },
-      data: {
-        status: RequestStatus.ON_THE_WAY,
-      },
-    });
+      return trip;
+    },
+    {
+      timeout: 10000,
+    },
+  );
 
-    await AuditLogService.createAuditLog({
-      userId: driverUserId,
-      action: "START_TRIP",
-      entity: "TRIP",
-      entityId: trip.id,
-    });
-
-    return trip;
+  
+  await AuditLogService.createAuditLog({
+    userId: driverUserId,
+    action: "START_TRIP",
+    entity: "TRIP",
+    entityId: result.id,
   });
 
   return result;
