@@ -109,6 +109,59 @@ const getEmergencyRequestByIdForAdmin = catchAsync(
   },
 );
 
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAllUsers(
+    req.query as {
+      page?: string;
+      limit?: string;
+      role?: string;
+      status?: string;
+      search?: string;
+      sortBy?: string;
+      sortOrder?: string;
+    },
+  );
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Users retrieved successfully.",
+    data: result,
+  });
+});
+
+const getUserByIdForAdmin = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  const result = await AdminService.getUserByIdForAdmin(userId as string);
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User retrieved successfully.",
+    data: result,
+  });
+});
+
+const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const { status } = req.body;
+  const adminId = req.user?.id;
+
+  const result = await AdminService.updateUserStatus(
+    userId as string,
+    adminId as string,
+    status,
+  );
+
+  apiResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User status updated successfully.",
+    data: result,
+  });
+});
+
 export const AdminController = {
   getPendingDrivers,
   approveDriver,
@@ -116,4 +169,7 @@ export const AdminController = {
   assignAmbulance,
   getAllEmergencyRequests,
   getEmergencyRequestByIdForAdmin,
+  getAllUsers,
+  getUserByIdForAdmin,
+  updateUserStatus,
 };

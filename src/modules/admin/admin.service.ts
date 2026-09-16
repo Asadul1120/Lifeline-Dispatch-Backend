@@ -1,4 +1,5 @@
 import httpStatus from "http-status-codes";
+
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
 import {
@@ -6,6 +7,7 @@ import {
   DriverApplicationStatus,
   RequestStatus,
   Role,
+  UserStatus,
 } from "../../generated/prisma/enums.ts";
 import { AuditLogService } from "../auditLog/auditLog.service.ts";
 
@@ -477,6 +479,178 @@ const getEmergencyRequestByIdForAdmin = async (requestId: string) => {
   return emergencyRequest;
 };
 
+
+const getAllUsers = async (query: {
+  page?: string;
+  limit?: string;
+  role?: string;
+  status?: string;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}) => {
+  const page = Math.max(Number(query.page) || 1, 1);
+  const limit = Math.min(Math.max(Number(query.limit) || 10, 1), 100);
+  const skip = (page - 1) * limit;
+
+  const where: any = {};
+
+  if (query.role) {
+    where.role = query.role;
+  }
+
+  if (query.status) {
+    where.status = query.status;
+  }
+
+  if (query.search) {
+    where.OR = [
+      {
+        name: {
+          contains: query.search,
+          mode: "insensitive",
+        },
+      },
+      {
+        email: {
+          contains: query.search,
+          mode: "insensitive",
+        },
+      },
+    ];
+  }
+
+  const allowedSortFields = [
+    "createdAt",
+    "updatedAt",
+    "name",
+    "email",
+    "role",
+    "status",
+  ];
+
+  const sortBy = allowedSortFields.includes(query.sortBy || "")
+    ? query.sortBy!
+    : "createdAt";
+
+  const sortOrder = query.sortOrder === "asc" ? "asc" : "desc";
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      skip,
+      take: limit,
+
+      omit: {
+        password: true,
+        googleId: true,
+      },
+
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    }),
+
+    prisma.user.count({
+      where,
+    }),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    data: users,
+
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    },
+  };
+};
+
+const getUserByIdForAdmin = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+
+    include: {
+      patient: true,
+      driver: true,
+    },
+
+    omit: {
+      password: true,
+      googleId: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  return user;
+};
+
+const updateUserStatus = async (
+  userId: string,
+  adminId: string,
+  status: UserStatus,
+) => {
+  if (!Object.values(UserStatus).includes(status)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid user status");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.id === adminId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Admin cannot change own account status",
+    );
+  }
+
+  if (user.status === status) {
+    throw new AppError(httpStatus.BAD_REQUEST, `User is already ${status}`);
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+
+    data: {
+      status,
+    },
+
+    omit: {
+      password: true,
+      googleId: true,
+    },
+  });
+
+  await AuditLogService.createAuditLog({
+    userId: adminId,
+    action: `UPDATE_USER_STATUS_${status}`,
+    entity: "USER",
+    entityId: userId,
+  });
+
+  return updatedUser;
+};
+
 export const AdminService = {
   getPendingDrivers,
   approveDriver,
@@ -484,4 +658,7 @@ export const AdminService = {
   assignAmbulance,
   getAllEmergencyRequests,
   getEmergencyRequestByIdForAdmin,
+  getAllUsers,
+  getUserByIdForAdmin,
+  updateUserStatus,
 };

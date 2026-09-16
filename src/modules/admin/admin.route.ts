@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import { AdminController } from "./admin.controller.js";
 import Auth from "../../middleware/Auth.js";
 import { Role } from "../../generated/prisma/enums.js";
@@ -43,6 +42,20 @@ router.get(
   "/emergency-requests/:requestId",
   Auth(Role.ADMIN),
   AdminController.getEmergencyRequestByIdForAdmin,
+);
+
+router.get("/users", Auth(Role.ADMIN), AdminController.getAllUsers);
+
+router.get(
+  "/users/:userId",
+  Auth(Role.ADMIN),
+  AdminController.getUserByIdForAdmin,
+);
+
+router.patch(
+  "/users/status/:userId",
+  Auth(Role.ADMIN),
+  AdminController.updateUserStatus,
 );
 
 export const adminRoutes = router;
