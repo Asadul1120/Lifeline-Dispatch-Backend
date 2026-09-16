@@ -28,6 +28,7 @@ const getMyEmergencyRequests = catchAsync(
 
     const result = await EmergencyRequestService.getMyEmergencyRequests(
       userId as string,
+      req.query,
     );
 
     apiResponse(res, {

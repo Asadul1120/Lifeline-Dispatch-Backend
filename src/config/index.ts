@@ -34,4 +34,11 @@ export const config = {
   tester_admin_name: process.env.TESTER_ADMIN_NAME!,
   tester_admin_email: process.env.TESTER_ADMIN_EMAIL!,
   tester_admin_password: process.env.TESTER_ADMIN_PASSWORD!,
+
+  bkash_tokenize_base_url: process.env.BKASH_TOKENIZE_BASE_URL!,
+  bkash_tokenize_user_name: process.env.BKASH_TOKENIZE_USER_NAME!,
+  bkash_tokenize_password: process.env.BKASH_TOKENIZE_PASSWORD!,
+  bkash_tokenize_app_key: process.env.BKASH_TOKENIZE_APP_KEY!,
+  bkash_tokenize_app_secret: process.env.BKASH_TOKENIZE_APP_SECRET!,
+  bkash_callback_url: process.env.BKASH_CALLBACK_URL!,
 };
