@@ -1,8 +1,13 @@
 import httpStatus from "http-status-codes";
-
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
-import { AmbulanceStatus, DriverApplicationStatus, RequestStatus, Role } from "../../generated/prisma/enums.ts";
+import {
+  AmbulanceStatus,
+  DriverApplicationStatus,
+  RequestStatus,
+  Role,
+} from "../../generated/prisma/enums.ts";
+import { AuditLogService } from "../auditLog/auditLog.service.ts";
 
 const getPendingDrivers = async () => {
   const drivers = await prisma.driver.findMany({
@@ -85,6 +90,13 @@ const approveDriver = async (driverId: string, adminId: string) => {
     },
   });
 
+  await AuditLogService.createAuditLog({
+    userId: adminId,
+    action: "APPROVE_DRIVER",
+    entity: "DRIVER",
+    entityId: driverId,
+  });
+
   return updatedDriver;
 };
 
@@ -139,6 +151,13 @@ const rejectDriver = async (driverId: string, adminId: string) => {
         },
       },
     },
+  });
+
+  await AuditLogService.createAuditLog({
+    userId: adminId,
+    action: "REJECT_DRIVER",
+    entity: "DRIVER",
+    entityId: driverId,
   });
 
   return rejectedDriver;
@@ -254,6 +273,13 @@ const assignAmbulance = async (
     });
 
     return updatedRequest;
+  });
+
+  await AuditLogService.createAuditLog({
+    userId: adminId,
+    action: "ASSIGN_AMBULANCE",
+    entity: "EMERGENCY_REQUEST",
+    entityId: requestId,
   });
 
   return result;

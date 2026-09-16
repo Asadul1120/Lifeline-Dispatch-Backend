@@ -2,6 +2,7 @@ import { config } from "../../config/index.ts";
 import { PaymentMethod, PaymentStatus } from "../../generated/prisma/enums.ts";
 import { getBkashIdToken } from "../../lib/bkash.ts";
 import { prisma } from "../../lib/prisma.ts";
+import { AuditLogService } from "../auditLog/auditLog.service.ts";
 import { ICreatePayment, IPaymentCallback } from "./payment.interface.ts";
 
 const createPayment = async (userId: string, payload: ICreatePayment) => {
@@ -39,6 +40,13 @@ const createPayment = async (userId: string, payload: ICreatePayment) => {
     },
   });
 
+  await AuditLogService.createAuditLog({
+    userId,
+    action: "CREATE_PAYMENT",
+    entity: "PAYMENT",
+    entityId: payment.id,
+  });
+
   const idToken = await getBkashIdToken();
 
   const res = await fetch(
@@ -71,7 +79,7 @@ const createPayment = async (userId: string, payload: ICreatePayment) => {
         id: payment.id,
       },
       data: {
-        status: "FAILED",
+        status: PaymentStatus.FAILED,
       },
     });
 
@@ -101,9 +109,10 @@ const paymentCallback = async (payload: IPaymentCallback) => {
 
   const payment = await prisma.payment.findFirst({
     where: {
-      // bKash paymentID is returned from callback,
-      // so we identify the payment from the invoice/id saved earlier.
       id: payload.merchantInvoiceNumber,
+    },
+    include: {
+      request: true,
     },
   });
 
@@ -147,6 +156,13 @@ const paymentCallback = async (payload: IPaymentCallback) => {
         },
       });
 
+      await AuditLogService.createAuditLog({
+        userId: payment.request.patientId,
+        action: "PAYMENT_SUCCESS",
+        entity: "PAYMENT",
+        entityId: payment.id,
+      });
+
       return {
         ...data,
         payment: updatedPayment,
@@ -159,7 +175,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
         id: payment.id,
       },
       data: {
-        status: "FAILED",
+        status: PaymentStatus.FAILED,
       },
     });
 
@@ -175,7 +191,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
         id: payment.id,
       },
       data: {
-        status: "FAILED",
+        status: PaymentStatus.FAILED,
       },
     });
 
@@ -191,7 +207,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
         id: payment.id,
       },
       data: {
-        status: "FAILED",
+        status: PaymentStatus.FAILED,
       },
     });
 

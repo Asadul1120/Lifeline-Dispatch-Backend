@@ -7,6 +7,7 @@ import {
   ICreateEmergencyRequest,
   IEmergencyRequestQuery,
 } from "./emergencyRequest.interface.ts";
+import { AuditLogService } from "../auditLog/auditLog.service.ts";
 
 const createEmergencyRequest = async (
   userId: string,
@@ -46,6 +47,13 @@ const createEmergencyRequest = async (
         },
       },
     },
+  });
+
+  await AuditLogService.createAuditLog({
+    userId,
+    action: "CREATE_EMERGENCY_REQUEST",
+    entity: "EMERGENCY_REQUEST",
+    entityId: emergencyRequest.id,
   });
 
   return emergencyRequest;
@@ -280,6 +288,12 @@ const cancelEmergencyRequest = async (userId: string, requestId: string) => {
         },
       },
     },
+  });
+  await AuditLogService.createAuditLog({
+    userId,
+    action: "CANCEL_EMERGENCY_REQUEST",
+    entity: "EMERGENCY_REQUEST",
+    entityId: requestId,
   });
 
   return cancelledRequest;

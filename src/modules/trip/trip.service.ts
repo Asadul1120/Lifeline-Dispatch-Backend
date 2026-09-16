@@ -9,6 +9,7 @@ import {
   Role,
   TripStatus,
 } from "../../generated/prisma/enums.ts";
+import { AuditLogService } from "../auditLog/auditLog.service.ts";
 
 const startTrip = async (driverUserId: string, requestId: string) => {
   const result = await prisma.$transaction(async (tx) => {
@@ -98,6 +99,13 @@ const startTrip = async (driverUserId: string, requestId: string) => {
       data: {
         status: RequestStatus.ON_THE_WAY,
       },
+    });
+
+    await AuditLogService.createAuditLog({
+      userId: driverUserId,
+      action: "START_TRIP",
+      entity: "TRIP",
+      entityId: trip.id,
     });
 
     return trip;
@@ -191,6 +199,13 @@ const updateTripStatus = async (
         },
       });
 
+      await AuditLogService.createAuditLog({
+        userId: driverUserId,
+        action: "UPDATE_TRIP_STATUS_COMPLETED",
+        entity: "TRIP",
+        entityId: tripId,
+      });
+
       return updatedTrip;
     }
 
@@ -201,6 +216,13 @@ const updateTripStatus = async (
       data: {
         status,
       },
+    });
+
+    await AuditLogService.createAuditLog({
+      userId: driverUserId,
+      action: `UPDATE_TRIP_STATUS_${status}`,
+      entity: "TRIP",
+      entityId: tripId,
     });
 
     return updatedTrip;

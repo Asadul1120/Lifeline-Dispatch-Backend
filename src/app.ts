@@ -13,6 +13,7 @@ import { emergencyRequestRoutes } from "./modules/emergencyRequest/emergencyRequ
 import { ambulanceRoutes } from "./modules/ambulance/ambulance.route.ts";
 import { tripRoutes } from "./modules/trip/trip.route.ts";
 import { paymentRoutes } from "./modules/payment/payment.route.ts";
+import { auditLogRoutes } from "./modules/auditLog/auditLog.route.ts";
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/v1/emergencyRequest", emergencyRequestRoutes);
 app.use("/api/v1/ambulance", ambulanceRoutes);
 app.use("/api/v1/trip", tripRoutes);
 app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/audit-log", auditLogRoutes);
 
 // Error handling middleware
 app.use(notFound);
