@@ -285,9 +285,203 @@ const assignAmbulance = async (
   return result;
 };
 
+const getAllEmergencyRequests = async (query: {
+  page?: string;
+  limit?: string;
+  status?: string;
+  priority?: string;
+  emergencyType?: string;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}) => {
+  const page = Math.max(Number(query.page) || 1, 1);
+  const limit = Math.min(Math.max(Number(query.limit) || 10, 1), 100);
+  const skip = (page - 1) * limit;
+
+  const where: any = {};
+
+  if (query.status) {
+    where.status = query.status;
+  }
+
+  if (query.priority) {
+    where.priority = query.priority;
+  }
+
+  if (query.emergencyType) {
+    where.emergencyType = {
+      contains: query.emergencyType,
+      mode: "insensitive",
+    };
+  }
+
+  if (query.search) {
+    where.OR = [
+      {
+        pickupLocation: {
+          contains: query.search,
+          mode: "insensitive",
+        },
+      },
+      {
+        destination: {
+          contains: query.search,
+          mode: "insensitive",
+        },
+      },
+      {
+        emergencyType: {
+          contains: query.search,
+          mode: "insensitive",
+        },
+      },
+      {
+        patient: {
+          name: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+      },
+      {
+        patient: {
+          email: {
+            contains: query.search,
+            mode: "insensitive",
+          },
+        },
+      },
+    ];
+  }
+
+  const allowedSortFields = [
+    "createdAt",
+    "updatedAt",
+    "priority",
+    "status",
+    "emergencyType",
+  ];
+
+  const sortBy = allowedSortFields.includes(query.sortBy || "")
+    ? query.sortBy!
+    : "createdAt";
+
+  const sortOrder = query.sortOrder === "asc" ? "asc" : "desc";
+
+  const [requests, total] = await Promise.all([
+    prisma.emergencyRequest.findMany({
+      where,
+      skip,
+      take: limit,
+
+      include: {
+        patient: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            imageUrl: true,
+          },
+        },
+
+        ambulance: {
+          include: {
+            driver: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+
+        trip: true,
+        payment: true,
+      },
+
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    }),
+
+    prisma.emergencyRequest.count({
+      where,
+    }),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    data: requests,
+
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    },
+  };
+};
+
+const getEmergencyRequestByIdForAdmin = async (requestId: string) => {
+  const emergencyRequest = await prisma.emergencyRequest.findUnique({
+    where: {
+      id: requestId,
+    },
+
+    include: {
+      patient: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageUrl: true,
+          role: true,
+        },
+      },
+
+      ambulance: {
+        include: {
+          driver: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  role: true,
+                },
+              },
+            },
+          },
+        },
+      },
+
+      trip: true,
+      payment: true,
+    },
+  });
+
+  if (!emergencyRequest) {
+    throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
+  }
+
+  return emergencyRequest;
+};
+
 export const AdminService = {
   getPendingDrivers,
   approveDriver,
   rejectDriver,
   assignAmbulance,
+  getAllEmergencyRequests,
+  getEmergencyRequestByIdForAdmin,
 };

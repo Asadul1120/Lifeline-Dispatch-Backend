@@ -1,12 +1,12 @@
 import { Router } from "express";
+
 import { AdminController } from "./admin.controller.js";
 import Auth from "../../middleware/Auth.js";
 import { Role } from "../../generated/prisma/enums.js";
 import { assignAmbulanceValidation } from "./admin.validation.ts";
 import { validateRequest } from "../../middleware/validateRequest.ts";
-const router = Router();
 
-// Get all pending driver applications
+const router = Router();
 
 router.get(
   "/drivers/pending",
@@ -31,6 +31,18 @@ router.patch(
   Auth(Role.ADMIN),
   validateRequest(assignAmbulanceValidation),
   AdminController.assignAmbulance,
+);
+
+router.get(
+  "/emergency-requests",
+  Auth(Role.ADMIN),
+  AdminController.getAllEmergencyRequests,
+);
+
+router.get(
+  "/emergency-requests/:requestId",
+  Auth(Role.ADMIN),
+  AdminController.getEmergencyRequestByIdForAdmin,
 );
 
 export const adminRoutes = router;
