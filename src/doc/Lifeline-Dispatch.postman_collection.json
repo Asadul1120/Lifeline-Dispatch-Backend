@@ -1,0 +1,1326 @@
+{
+  "info": {
+    "_postman_id": "84d062b4-ae52-4fb1-bde8-ccb0861adf7e",
+    "name": "Lifeline-Dispatch",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "37760772",
+    "_collection_link": "https://go.postman.co/collection/37760772-84d062b4-ae52-4fb1-bde8-ccb0861adf7e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Asadul Islam\",\r\n  \"email\": \"asadulcb@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/auth/register",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify-email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"asadulcb@gmail.com\",\r\n  \"otp\": \"214523\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/auth/verify-email",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/auth/login",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh-token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"asadulcb45@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/auth/refresh-token",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"asadulcb@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/auth/logout",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/user/me",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateMe",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ace/Desktop/Asadul_Islam_Dev.png"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "{\n  \"name\": \"Asadul Islam 1\",\n  \"patient\": {\n    \"phone\": \"01712345679\",\n    \"address\": \"Dhaka, Bangladesh\",\n    \"bloodGroup\": \"B+\",\n    \"emergencyContact\": \"01812345678\"\n  }\n}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/user/me",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "driver",
+      "item": [
+        {
+          "name": "apply",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Rahim Ahmed\",\r\n  \"email\": \"asadulcb45@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"licenseNumber\": \"DL-123456\",\r\n  \"experience\": 5,\r\n  \"currentLocation\": \"Dhaka\",\r\n  \"contactNumber\": \"01712345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/driver/apply",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "driver",
+                "apply"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/driver-verify",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"asadulcb45@gmail.com\",\r\n  \"otp\": \"754198\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/driver/driver-verify",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "driver",
+                "driver-verify"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "admin",
+      "item": [
+        {
+          "name": "drivers/pending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/drivers/pending",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "drivers",
+                "pending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/drivers/approve/:driverId",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/drivers/approve/a978c359-6401-433a-9097-2692b7340bf3",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "drivers",
+                "approve",
+                "a978c359-6401-433a-9097-2692b7340bf3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/drivers/reject/:driverId",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/drivers/reject/a978c359-6401-433a-9097-2692b7340bf3",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "drivers",
+                "reject",
+                "a978c359-6401-433a-9097-2692b7340bf3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests/assign/REQUEST_ID",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests/assign/56f2a7a0-ebbc-479d-b841-4d539b64bd68",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests",
+                "assign",
+                "56f2a7a0-ebbc-479d-b841-4d539b64bd68"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests/:requestId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests/56f2a7a0-ebbc-479d-b841-4d539b64bd68",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests",
+                "56f2a7a0-ebbc-479d-b841-4d539b64bd68"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/emergency-requests?page=1&limit=10",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?page=1&limit=10",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests?status=PENDING",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?status=PENDING",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests?status=PENDING Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?status=PENDING",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests?priority=CRITICAL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?priority=CRITICAL",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "CRITICAL"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests?search=Dhaka",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?search=Dhaka",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Dhaka"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergency-requests?sortBy=createdAt&sortOrder=desc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ambulanceId\": \"c5230392-2ec6-429b-9a53-e3c0ba139bc4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/admin/emergency-requests?sortBy=createdAt&sortOrder=desc",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "emergency-requests"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "emergencyRequest",
+      "item": [
+        {
+          "name": "emergencyRequest/create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pickupLocation\": \"Mirpur, Dhaka\",\r\n  \"destination\": \"Dhaka Medical College\",\r\n  \"emergencyType\": \"Accident\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/emergencyRequest/create",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emergencyRequest",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergencyRequest/my",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pickupLocation\": \"Mirpur, Dhaka\",\r\n  \"destination\": \"Dhaka Medical College\",\r\n  \"emergencyType\": \"Accident\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/emergencyRequest/my?status=COMPLETED",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emergencyRequest",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "COMPLETED"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergencyRequest/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pickupLocation\": \"Mirpur, Dhaka\",\r\n  \"destination\": \"Dhaka Medical College\",\r\n  \"emergencyType\": \"Accident\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/emergencyRequest/54db7b8b-8d80-4beb-8cda-7d38331e01e9",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emergencyRequest",
+                "54db7b8b-8d80-4beb-8cda-7d38331e01e9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "emergencyRequest/cancel/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pickupLocation\": \"Mirpur, Dhaka\",\r\n  \"destination\": \"Dhaka Medical College\",\r\n  \"emergencyType\": \"Accident\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/emergencyRequest/cancel/caa45b15-17e2-4900-850f-90f6144709f1",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emergencyRequest",
+                "cancel",
+                "caa45b15-17e2-4900-850f-90f6144709f1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ambulance",
+      "item": [
+        {
+          "name": "ambulance/create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"driverId\": \"a978c359-6401-433a-9097-2692b7340bf3\",\r\n  \"vehicleNumber\": \"DHAKA-METRO-HA-11-1234\",\r\n  \"type\": \"BASIC\",\r\n  \"location\": \"Dhanmondi, Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/ambulance/create",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ambulance",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ambulance/get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"vehicleNumber\": \"DHAKA-1234\",\r\n  \"type\": \"ICU\",\r\n  \"location\": \"Mirpur, Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/ambulance",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ambulance"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ambulance/available_id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/ambulance/c5230392-2ec6-429b-9a53-e3c0ba139bc4",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ambulance",
+                "c5230392-2ec6-429b-9a53-e3c0ba139bc4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/ambulance/status/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"AVAILABLE\",\r\n  \"location\": \"Farmgate, Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/ambulance/status/c5230392-2ec6-429b-9a53-e3c0ba139bc4",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ambulance",
+                "status",
+                "c5230392-2ec6-429b-9a53-e3c0ba139bc4"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "trip",
+      "item": [
+        {
+          "name": "trip/start/REQUEST_ID",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/trip/start/56f2a7a0-ebbc-479d-b841-4d539b64bd68",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trip",
+                "start",
+                "56f2a7a0-ebbc-479d-b841-4d539b64bd68"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "trip/status/:tripId",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"COMPLETED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/trip/status/6e314144-c8e9-4123-bc6e-bd49fa779c3c",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trip",
+                "status",
+                "6e314144-c8e9-4123-bc6e-bd49fa779c3c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "trip/my",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"ONGOING\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/trip/my",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trip",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "trip/:tripId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"ONGOING\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/trip/559e3b35-b7c5-4a30-966d-d666eb89860a",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trip",
+                "559e3b35-b7c5-4a30-966d-d666eb89860a"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "item": [
+        {
+          "name": "payment/create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"requestId\": \"YOUR-EMERGENCY-REQUEST-ID\",\r\n  \"amount\": 500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/payment/create",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payment/my",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"requestId\": \"YOUR-EMERGENCY-REQUEST-ID\",\r\n  \"amount\": 500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/payment/my",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payment/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"requestId\": \"YOUR-EMERGENCY-REQUEST-ID\",\r\n  \"amount\": 500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{backend_url}}/api/v1/payment/32de54fe-c210-496c-8119-66f435111cd6",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payment",
+                "32de54fe-c210-496c-8119-66f435111cd6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "audit-log",
+      "item": [
+        {
+          "name": "GET",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}} /api/v1/audit-log",
+              "host": [
+                "{{backend_url}} "
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "page=1&limit=5",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}} /api/v1/audit-log?page=1&limit=5",
+              "host": [
+                "{{backend_url}} "
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "action=CREATE_PAYMENT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log?action=CREATE_PAYMENT",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "CREATE_PAYMENT"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "entity=TRIP",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log?entity=TRIP",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "entity",
+                  "value": "TRIP"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search=payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log?search=payment",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "payment"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sortBy=createdAt&sortOrder=asc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log?sortBy=createdAt&sortOrder=asc",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "dateFrom=2026-09-01&dateTo=2026-09-16",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log?dateFrom=2026-09-01&dateTo=2026-09-16",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log"
+              ],
+              "query": [
+                {
+                  "key": "dateFrom",
+                  "value": "2026-09-01"
+                },
+                {
+                  "key": "dateTo",
+                  "value": "2026-09-16"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user/:ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/api/v1/audit-log/user/db26f3e1-3533-4d14-8a96-fab957caa5af",
+              "host": [
+                "{{backend_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-log",
+                "user",
+                "db26f3e1-3533-4d14-8a96-fab957caa5af"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
