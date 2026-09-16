@@ -4,16 +4,16 @@ A backend-focused emergency ambulance dispatch REST API built with **Node.js, Ty
 
 ## Project Information
 
-| Field | Details |
-|---|---|
-| Project name | LifeLine Dispatch |
-| Project type | Emergency Ambulance Dispatch System |
-| Student ID | L2B7-1205 |
-| API version | v1 |
-| Primary roles | Patient, Driver, Admin |
-| Database | PostgreSQL with Prisma ORM |
-| Payment gateway | bKash |
-| Runtime | Node.js with TypeScript |
+| Field           | Details                             |
+| --------------- | ----------------------------------- |
+| Project name    | LifeLine Dispatch                   |
+| Project type    | Emergency Ambulance Dispatch System |
+| Student ID      | L2B7-1205                           |
+| API version     | v1                                  |
+| Primary roles   | Patient, Driver, Admin              |
+| Database        | PostgreSQL with Prisma ORM          |
+| Payment gateway | bKash                               |
+| Runtime         | Node.js with TypeScript             |
 
 ## Problem Statement
 
@@ -144,39 +144,39 @@ Cookie: accessToken=<access-token>
 
 ### Authentication
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/auth/register` | Public | Register a patient account |
-| `POST` | `/auth/verify-email` | Public | Verify a patient email using OTP |
-| `POST` | `/auth/login` | Public | Log in with email and password |
-| `POST` | `/auth/refresh-token` | Public | Create a new access token |
-| `POST` | `/auth/google` | Public | Log in with a Google ID token |
-| `POST` | `/auth/logout` | Public/Auth | Log out the current session |
+| Method | Endpoint              | Access      | Description                      |
+| ------ | --------------------- | ----------- | -------------------------------- |
+| `POST` | `/auth/register`      | Public      | Register a patient account       |
+| `POST` | `/auth/verify-email`  | Public      | Verify a patient email using OTP |
+| `POST` | `/auth/login`         | Public      | Log in with email and password   |
+| `POST` | `/auth/refresh-token` | Public      | Create a new access token        |
+| `POST` | `/auth/google`        | Public      | Log in with a Google ID token    |
+| `POST` | `/auth/logout`        | Public/Auth | Log out the current session      |
 
 ### User Profile
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `GET` | `/user/me` | Authenticated | Get the current user profile |
+| Method  | Endpoint   | Access        | Description                                   |
+| ------- | ---------- | ------------- | --------------------------------------------- |
+| `GET`   | `/user/me` | Authenticated | Get the current user profile                  |
 | `PATCH` | `/user/me` | Authenticated | Update profile data or upload a profile image |
 
 For profile-image upload, use `multipart/form-data` with the field name `profileImage`.
 
 ### Driver
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/driver/apply` | Public | Submit a driver application |
+| Method | Endpoint                | Access | Description                       |
+| ------ | ----------------------- | ------ | --------------------------------- |
+| `POST` | `/driver/apply`         | Public | Submit a driver application       |
 | `POST` | `/driver/driver-verify` | Public | Verify a driver account using OTP |
 
 ### Emergency Requests
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/emergencyRequest/create` | Patient | Create an emergency ambulance request |
-| `GET` | `/emergencyRequest/my` | Patient | Get the current patient's requests |
-| `GET` | `/emergencyRequest/:id` | Patient | Get a specific emergency request |
-| `PATCH` | `/emergencyRequest/cancel/:id` | Patient | Cancel an eligible request |
+| Method  | Endpoint                       | Access  | Description                           |
+| ------- | ------------------------------ | ------- | ------------------------------------- |
+| `POST`  | `/emergencyRequest/create`     | Patient | Create an emergency ambulance request |
+| `GET`   | `/emergencyRequest/my`         | Patient | Get the current patient's requests    |
+| `GET`   | `/emergencyRequest/:id`        | Patient | Get a specific emergency request      |
+| `PATCH` | `/emergencyRequest/cancel/:id` | Patient | Cancel an eligible request            |
 
 Example request body:
 
@@ -193,56 +193,56 @@ Supported priority values are `LOW`, `MEDIUM`, `HIGH` and `CRITICAL`.
 
 ### Ambulance and Dispatch Administration
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/ambulance/create` | Admin | Create an ambulance record |
-| `GET` | `/ambulance` | Admin | Get all ambulances |
-| `GET` | `/ambulance/:id` | Admin | Get an ambulance by ID |
-| `PATCH` | `/ambulance/:id` | Admin | Update ambulance information |
-| `PATCH` | `/ambulance/status/:id` | Admin | Update ambulance status |
+| Method  | Endpoint                | Access | Description                  |
+| ------- | ----------------------- | ------ | ---------------------------- |
+| `POST`  | `/ambulance/create`     | Admin  | Create an ambulance record   |
+| `GET`   | `/ambulance`            | Admin  | Get all ambulances           |
+| `GET`   | `/ambulance/:id`        | Admin  | Get an ambulance by ID       |
+| `PATCH` | `/ambulance/:id`        | Admin  | Update ambulance information |
+| `PATCH` | `/ambulance/status/:id` | Admin  | Update ambulance status      |
 
 ### Admin Operations
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `GET` | `/admin/drivers/pending` | Admin | Get pending driver applications |
-| `PATCH` | `/admin/drivers/approve/:driverId` | Admin | Approve a driver application |
-| `PATCH` | `/admin/drivers/reject/:driverId` | Admin | Reject a driver application |
-| `PATCH` | `/admin/emergency-requests/assign/:requestId` | Admin | Assign an ambulance to a request |
-| `GET` | `/admin/emergency-requests` | Admin | Get all emergency requests |
-| `GET` | `/admin/emergency-requests/:requestId` | Admin | Get a request by ID |
-| `GET` | `/admin/users` | Admin | Get all users |
-| `GET` | `/admin/users/:userId` | Admin | Get a user by ID |
-| `PATCH` | `/admin/users/status/:userId` | Admin | Update a user's account status |
+| Method  | Endpoint                                      | Access | Description                      |
+| ------- | --------------------------------------------- | ------ | -------------------------------- |
+| `GET`   | `/admin/drivers/pending`                      | Admin  | Get pending driver applications  |
+| `PATCH` | `/admin/drivers/approve/:driverId`            | Admin  | Approve a driver application     |
+| `PATCH` | `/admin/drivers/reject/:driverId`             | Admin  | Reject a driver application      |
+| `PATCH` | `/admin/emergency-requests/assign/:requestId` | Admin  | Assign an ambulance to a request |
+| `GET`   | `/admin/emergency-requests`                   | Admin  | Get all emergency requests       |
+| `GET`   | `/admin/emergency-requests/:requestId`        | Admin  | Get a request by ID              |
+| `GET`   | `/admin/users`                                | Admin  | Get all users                    |
+| `GET`   | `/admin/users/:userId`                        | Admin  | Get a user by ID                 |
+| `PATCH` | `/admin/users/status/:userId`                 | Admin  | Update a user's account status   |
 
 ### Trips
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/trip/start/:requestId` | Driver | Start a trip for an emergency request |
-| `PATCH` | `/trip/status/:tripId` | Driver | Update trip status |
-| `GET` | `/trip/my` | Driver | Get the current driver's trips |
-| `GET` | `/trip/:tripId` | Driver | Get a specific trip |
+| Method  | Endpoint                 | Access | Description                           |
+| ------- | ------------------------ | ------ | ------------------------------------- |
+| `POST`  | `/trip/start/:requestId` | Driver | Start a trip for an emergency request |
+| `PATCH` | `/trip/status/:tripId`   | Driver | Update trip status                    |
+| `GET`   | `/trip/my`               | Driver | Get the current driver's trips        |
+| `GET`   | `/trip/:tripId`          | Driver | Get a specific trip                   |
 
 Supported trip status values are `ONGOING`, `COMPLETED` and `CANCELLED`.
 
 ### Payments
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/payment/create` | Patient | Create a bKash payment request |
-| `GET` | `/payment/my` | Patient | Get the current patient's payments |
-| `GET` | `/payment/:paymentId` | Patient | Get a specific payment |
-| `GET` | `/payment/bkash/callback` | bKash callback | Execute and verify the bKash payment |
+| Method | Endpoint                  | Access         | Description                          |
+| ------ | ------------------------- | -------------- | ------------------------------------ |
+| `POST` | `/payment/create`         | Patient        | Create a bKash payment request       |
+| `GET`  | `/payment/my`             | Patient        | Get the current patient's payments   |
+| `GET`  | `/payment/:paymentId`     | Patient        | Get a specific payment               |
+| `GET`  | `/payment/bkash/callback` | bKash callback | Execute and verify the bKash payment |
 
 ### Admin and Audit Logs
 
 The admin module provides driver approval, ambulance assignment, emergency-request management and user-status management. The audit-log module provides administrative audit history routes with filtering, sorting and pagination support.
 
-| Module | Access | Description |
-|---|---|---|
-| `GET /audit-log` | Admin | Get all audit logs with query filters |
-| `GET /audit-log/user/:userId` | Admin | Get audit logs for a specific user |
+| Module                        | Access | Description                           |
+| ----------------------------- | ------ | ------------------------------------- |
+| `GET /audit-log`              | Admin  | Get all audit logs with query filters |
+| `GET /audit-log/user/:userId` | Admin  | Get audit logs for a specific user    |
 
 ## Database Models
 
@@ -377,17 +377,17 @@ The default local port is `5000` unless another value is supplied through `PORT`
 
 The project reads configuration from `.env`. The main variables are:
 
-| Variable group | Variables |
-|---|---|
-| Application | `NODE_ENV`, `PORT`, `FRONTEND_URL`, `BACKEND_URL` |
-| Database | `DATABASE_URL` |
-| JWT | `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN` |
-| Password | `BCRYPT_SALT_ROUNDS` |
-| Redis | `REDIS_USER`, `REDIS_PASSWORD`, `REDIS_HOST`, `REDIS_PORT` |
-| Email | `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_SENDER` |
-| Google | `GOOGLE_CLIENT_ID` |
-| Cloudinary | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
-| bKash | Configure the bKash values used by `src/config/index.ts` and `src/lib/bkash.ts` |
+| Variable group | Variables                                                                                    |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| Application    | `NODE_ENV`, `PORT`, `FRONTEND_URL`, `BACKEND_URL`                                            |
+| Database       | `DATABASE_URL`                                                                               |
+| JWT            | `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN` |
+| Password       | `BCRYPT_SALT_ROUNDS`                                                                         |
+| Redis          | `REDIS_USER`, `REDIS_PASSWORD`, `REDIS_HOST`, `REDIS_PORT`                                   |
+| Email          | `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_SENDER`                                                 |
+| Google         | `GOOGLE_CLIENT_ID`                                                                           |
+| Cloudinary     | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`                       |
+| bKash          | Configure the bKash values used by `src/config/index.ts` and `src/lib/bkash.ts`              |
 
 ## Payment Flow
 
@@ -463,7 +463,7 @@ Student ID      : L2B7-1205
 Backend Repo    : https://github.com/Asadul1120/Lifeline-Dispatch-Backend.git
 Live API        : https://lifeline-dispatch-backend.vercel.app
 API Docs        : https://documenter.getpostman.com/view/37760772/2sBYB1M85o
-Demo Video      : https://drive.google.com/file/d/xyz/view
+Demo Video      : https://drive.google.com/file/d/1J7ssfNZTbdeqBTLn0dKQFepWo-yDFjay/view?usp=sharing
 Admin Email     : admin@gmail.com
 Admin Password  : 123456
 ```
