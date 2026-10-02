@@ -21,7 +21,19 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "src", "templates"));
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "https://lifeline-dispatch-fontend.netlify.app",
+  process.env.FRONTEND_URL?.trim(),
+].filter((origin): origin is string => Boolean(origin));
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
@@ -36,12 +48,6 @@ app.get("/", (_req: Request, res: Response) => {
   });
 });
 
-// Google Login Test Page
-app.get("/google-login", (_req: Request, res: Response) => {
-  res.render("google-login", {
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  });
-});
 
 // Main routes
 app.use("/api/v1/auth", authRoutes);

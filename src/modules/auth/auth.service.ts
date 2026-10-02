@@ -162,7 +162,7 @@ const LoginUser = async (payload: ILoginPayload) => {
   });
 
   if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid your email");
   }
 
   if (!user.emailVerified) {
@@ -185,7 +185,7 @@ const LoginUser = async (payload: ILoginPayload) => {
   );
 
   if (!isPasswordValid) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid password");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid your password");
   }
 
   const jwtPayload = {
