@@ -4,6 +4,7 @@ import Auth from "../../middleware/Auth.js";
 import { Role } from "../../generated/prisma/enums.js";
 import { assignAmbulanceValidation } from "./admin.validation.ts";
 import { validateRequest } from "../../middleware/validateRequest.ts";
+import { AdminDashboardController } from "./admin-dashboard.controller.ts";
 
 const router = Router();
 
@@ -56,6 +57,11 @@ router.patch(
   "/users/status/:userId",
   Auth(Role.ADMIN),
   AdminController.updateUserStatus,
+);
+router.get(
+  "/dashboard",
+  Auth(Role.ADMIN),
+  AdminDashboardController.getSummary,
 );
 
 export const adminRoutes = router;

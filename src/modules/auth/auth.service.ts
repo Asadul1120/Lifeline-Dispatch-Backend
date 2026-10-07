@@ -202,6 +202,7 @@ const LoginUser = async (payload: ILoginPayload) => {
   return {
     accessToken,
     refreshToken,
+    role: user.role,
   };
 };
 
@@ -369,13 +370,12 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   return {
     accessToken,
     refreshToken,
+    role: user.role,
   };
 };
 
 const logoutUser = async () => {
-
   return null;
-
 };
 
 export const authService = {
