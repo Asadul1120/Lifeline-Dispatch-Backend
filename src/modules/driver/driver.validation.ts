@@ -31,9 +31,19 @@ export const driverApplyValidation = z.object({
     .optional(),
 });
 
-
-
 export const driverVerifyEmailValidation = z.object({
   email: z.string().email("Invalid email address"),
   otp: z.string().length(6, "OTP must be 6 characters"),
+});
+
+export const updateDriverAvailabilityValidation = z.object({
+  isAvailable: z.boolean(),
+});
+
+export const updateDriverLocationValidation = z.object({
+  currentLocation: z
+    .string()
+    .trim()
+    .min(1, "Current location is required")
+    .max(255, "Location cannot exceed 255 characters"),
 });

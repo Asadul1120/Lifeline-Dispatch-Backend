@@ -1,7 +1,13 @@
 import httpStatus from "http-status-codes";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/AppError.js";
-import { Role, AuthProvider } from "../../generated/prisma/enums.js";
+import {
+  AuthProvider,
+  DriverApplicationStatus,
+  RequestStatus,
+  Role,
+  TripStatus,
+} from "../../generated/prisma/enums.js";
 import { IDriverApplyPayload, IDriverVerifyEmail } from "./driver.interface.js";
 import { hashPassword } from "../../utils/password.js";
 import { redisClient } from "../../lib/redis.ts";
@@ -184,7 +190,131 @@ const VerifyDriver = async (payload: IDriverVerifyEmail) => {
   };
 };
 
+const getAssignedRequests = async (driverUserId: string) => {
+  const driver = await prisma.driver.findUnique({
+    where: {
+      userId: driverUserId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  return prisma.emergencyRequest.findMany({
+    where: {
+      status: RequestStatus.ASSIGNED,
+      trip: null,
+      ambulance: {
+        driverId: driver.id,
+      },
+    },
+    select: {
+      id: true,
+      pickupLocation: true,
+      destination: true,
+      emergencyType: true,
+      priority: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      patient: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      ambulance: {
+        select: {
+          id: true,
+          vehicleNumber: true,
+          type: true,
+          status: true,
+          location: true,
+        },
+      },
+    },
+    orderBy: [{ priority: "desc" }, { createdAt: "asc" }],
+  });
+};
+
+const updateAvailability = async (
+  driverUserId: string,
+  isAvailable: boolean,
+) => {
+  const driver = await prisma.driver.findUnique({
+    where: { userId: driverUserId },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  if (driver.applicationStatus !== DriverApplicationStatus.APPROVED) {
+    throw new AppError(httpStatus.FORBIDDEN, "Driver is not approved");
+  }
+
+  if (!isAvailable) {
+    const activeTrip = await prisma.trip.findFirst({
+      where: {
+        driverId: driver.id,
+        status: { in: [TripStatus.STARTED, TripStatus.ONGOING] },
+      },
+      select: { id: true },
+    });
+
+    if (activeTrip) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "Complete or cancel the active trip before going offline",
+      );
+    }
+  }
+
+  return prisma.driver.update({
+    where: { id: driver.id },
+    data: { isAvailable },
+    select: {
+      id: true,
+      isAvailable: true,
+      currentLocation: true,
+      applicationStatus: true,
+    },
+  });
+};
+
+const updateLocation = async (
+  driverUserId: string,
+  currentLocation: string,
+) => {
+  const driver = await prisma.driver.findUnique({
+    where: { userId: driverUserId },
+    select: { id: true },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  return prisma.driver.update({
+    where: { id: driver.id },
+    data: { currentLocation },
+    select: {
+      id: true,
+      isAvailable: true,
+      currentLocation: true,
+    },
+  });
+};
+
 export const DriverService = {
   applyDriver,
   VerifyDriver,
+  getAssignedRequests,
+  updateAvailability,
+  updateLocation,
 };

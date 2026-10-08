@@ -26,23 +26,32 @@ const createPayment = async (userId: string, payload: ICreatePayment) => {
     },
   });
 
-  if (existingPayment) {
-    throw new Error("Payment already exists for this request");
+  if (existingPayment?.status === PaymentStatus.PAID) {
+    throw new Error("Payment has already been completed for this request");
   }
 
-  const payment = await prisma.payment.create({
-    data: {
-      requestId: payload.requestId,
-      amount: payload.amount,
-      gateway: "bKash",
-      method: PaymentMethod.bKash,
-      status: PaymentStatus.PENDING,
-    },
-  });
+  const payment = existingPayment
+    ? await prisma.payment.update({
+        where: { id: existingPayment.id },
+        data: {
+          amount: payload.amount,
+          status: PaymentStatus.PENDING,
+          transactionId: null,
+        },
+      })
+    : await prisma.payment.create({
+        data: {
+          requestId: payload.requestId,
+          amount: payload.amount,
+          gateway: "bKash",
+          method: PaymentMethod.bKash,
+          status: PaymentStatus.PENDING,
+        },
+      });
 
   await AuditLogService.createAuditLog({
     userId,
-    action: "CREATE_PAYMENT",
+    action: existingPayment ? "RETRY_PAYMENT" : "CREATE_PAYMENT",
     entity: "PAYMENT",
     entityId: payment.id,
   });
@@ -166,7 +175,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
       return {
         ...data,
         payment: updatedPayment,
-        redirectUrl: `${config.frontend_url}/payment/success`,
+        redirectUrl: `${config.frontend_url}/dashboard/patient/payments/success`,
       };
     }
 
@@ -181,7 +190,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
 
     return {
       ...data,
-      redirectUrl: `${config.frontend_url}/payment/failed`,
+      redirectUrl: `${config.frontend_url}/dashboard/patient/payments/failed`,
     };
   }
 
@@ -197,7 +206,7 @@ const paymentCallback = async (payload: IPaymentCallback) => {
 
     return {
       ...data,
-      redirectUrl: `${config.frontend_url}/payment/failed`,
+      redirectUrl: `${config.frontend_url}/dashboard/patient/payments/failed`,
     };
   }
 
@@ -213,13 +222,13 @@ const paymentCallback = async (payload: IPaymentCallback) => {
 
     return {
       ...data,
-      redirectUrl: `${config.frontend_url}/payment/cancel`,
+      redirectUrl: `${config.frontend_url}/dashboard/patient/payments/cancel`,
     };
   }
 
   return {
     ...data,
-    redirectUrl: `${config.frontend_url}/payment/unknown`,
+    redirectUrl: `${config.frontend_url}/dashboard/patient/payments/unknown`,
   };
 };
 

@@ -33,10 +33,7 @@ const startTrip = async (driverUserId: string, requestId: string) => {
       });
 
       if (!request) {
-        throw new AppError(
-          httpStatus.NOT_FOUND,
-          "Emergency request not found",
-        );
+        throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
       }
 
       if (!request.ambulance) {
@@ -122,7 +119,6 @@ const startTrip = async (driverUserId: string, requestId: string) => {
     },
   );
 
-  
   await AuditLogService.createAuditLog({
     userId: driverUserId,
     action: "START_TRIP",
@@ -137,6 +133,7 @@ const updateTripStatus = async (
   driverUserId: string,
   tripId: string,
   status: TripStatus,
+  cancelReason?: string,
 ) => {
   const result = await prisma.$transaction(async (tx) => {
     const trip = await tx.trip.findUnique({
@@ -176,6 +173,64 @@ const updateTripStatus = async (
         httpStatus.BAD_REQUEST,
         "Cancelled trip cannot be updated",
       );
+    }
+
+    if (status === TripStatus.ONGOING && trip.status !== TripStatus.STARTED) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Only a started trip can be marked on the way",
+      );
+    }
+
+    if (status === TripStatus.COMPLETED && trip.status !== TripStatus.ONGOING) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Trip must be on the way before it can be completed",
+      );
+    }
+
+    if (status === TripStatus.CANCELLED) {
+      if (!cancelReason?.trim()) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "Cancellation reason is required",
+        );
+      }
+
+      const cancelledTrip = await tx.trip.update({
+        where: { id: tripId },
+        data: {
+          status: TripStatus.CANCELLED,
+          cancelReason: cancelReason.trim(),
+          endTime: new Date(),
+        },
+      });
+
+      await tx.emergencyRequest.update({
+        where: { id: trip.requestId },
+        data: { status: RequestStatus.CANCELLED },
+      });
+
+      if (trip.request.ambulance) {
+        await tx.ambulance.update({
+          where: { id: trip.request.ambulance.id },
+          data: { status: AmbulanceStatus.AVAILABLE },
+        });
+      }
+
+      await tx.driver.update({
+        where: { id: trip.driverId },
+        data: { isAvailable: true },
+      });
+
+      await AuditLogService.createAuditLog({
+        userId: driverUserId,
+        action: "CANCEL_TRIP",
+        entity: "TRIP",
+        entityId: tripId,
+      });
+
+      return cancelledTrip;
     }
 
     if (status === TripStatus.COMPLETED) {
@@ -250,6 +305,60 @@ const updateTripStatus = async (
   return result;
 };
 
+const markTripOnTheWay = (driverUserId: string, tripId: string) =>
+  updateTripStatus(driverUserId, tripId, TripStatus.ONGOING);
+
+const completeTrip = (driverUserId: string, tripId: string) =>
+  updateTripStatus(driverUserId, tripId, TripStatus.COMPLETED);
+
+const markTripPickedUp = async (driverUserId: string, tripId: string) => {
+  const result = await prisma.$transaction(async (tx) => {
+    const trip = await tx.trip.findUnique({
+      where: { id: tripId },
+      include: { driver: true, request: true },
+    });
+
+    if (!trip) throw new AppError(httpStatus.NOT_FOUND, "Trip not found");
+    if (trip.driver.userId !== driverUserId) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not allowed to update this trip",
+      );
+    }
+    if (trip.status !== TripStatus.ONGOING) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Trip must be on the way before pickup",
+      );
+    }
+    if (trip.request.status !== RequestStatus.ON_THE_WAY) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Request is not ready for pickup",
+      );
+    }
+
+    await tx.emergencyRequest.update({
+      where: { id: trip.requestId },
+      data: { status: RequestStatus.PICKED_UP },
+    });
+
+    return tx.trip.findUnique({
+      where: { id: tripId },
+      include: { request: true },
+    });
+  });
+
+  await AuditLogService.createAuditLog({
+    userId: driverUserId,
+    action: "PICKUP_PATIENT",
+    entity: "TRIP",
+    entityId: tripId,
+  });
+
+  return result;
+};
+
 const getMyTrips = async (driverUserId: string) => {
   const driver = await prisma.driver.findUnique({
     where: {
@@ -273,6 +382,7 @@ const getMyTrips = async (driverUserId: string) => {
               id: true,
               name: true,
               email: true,
+              patient: { select: { phone: true } },
             },
           },
         },
@@ -308,6 +418,7 @@ const getTripById = async (userId: string, tripId: string) => {
               id: true,
               name: true,
               email: true,
+              patient: { select: { phone: true } },
             },
           },
           ambulance: true,
@@ -333,6 +444,9 @@ const getTripById = async (userId: string, tripId: string) => {
 export const TripService = {
   startTrip,
   updateTripStatus,
+  markTripOnTheWay,
+  markTripPickedUp,
+  completeTrip,
   getMyTrips,
   getTripById,
 };
